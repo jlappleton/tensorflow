@@ -13,8 +13,6 @@
 # limitations under the License.
 # ==============================================================================
 """Tests for checkpoint sharding policies."""
-
-import random
 import string
 
 from tensorflow.python.checkpoint import checkpoint
@@ -30,6 +28,7 @@ from tensorflow.python.module import module
 from tensorflow.python.ops import resource_variable_ops
 from tensorflow.python.ops import variables
 from tensorflow.python.training.saving import saveable_object
+import secrets
 
 
 class ShardingPoliciesTest(test.TestCase):
@@ -522,7 +521,7 @@ class ShardingPoliciesTest(test.TestCase):
   @test_util.run_in_graph_and_eager_modes
   def test_MaxShardSizePolicy_Strings(self):
     v_strings = [
-        "".join(random.choices(string.ascii_uppercase + string.digits, k=10))
+        "".join(secrets.SystemRandom().choices(string.ascii_uppercase + string.digits, k=10))
         for _ in range(4)]
 
     root = module.Module()
@@ -579,8 +578,7 @@ class ShardingPoliciesTest(test.TestCase):
 
   @test_util.run_in_graph_and_eager_modes
   def test_MaxShardSizePolicy_LargeScalar(self):
-    v_string = "".join(random.choices(
-        string.ascii_uppercase + string.digits, k=10)).encode("utf-8")
+    v_string = "".join(secrets.SystemRandom().choices(string.ascii_uppercase + string.digits, k=10)).encode("utf-8")
     root = module.Module()
     with ops.device("cpu:0"):
       v0 = resource_variable_ops.ResourceVariable(
