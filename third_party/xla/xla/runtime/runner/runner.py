@@ -22,6 +22,7 @@ import numpy as np
 
 from local_xla.xla import xla_data_pb2
 from xla.runtime.runner import runner_pb2
+from security import safe_command
 
 PrimitiveType = xla_data_pb2.PrimitiveType
 
@@ -111,7 +112,7 @@ class Runner:
         f"--module={module_file}", f"--arguments={arguments_file}",
         f"--results={results_file}"
     ]
-    result = subprocess.run(runner_cmd, capture_output=False, check=False)
+    result = safe_command.run(subprocess.run, runner_cmd, capture_output=False, check=False)
 
     if result.returncode != 0:
       err = result.stderr.decode("utf-8")
