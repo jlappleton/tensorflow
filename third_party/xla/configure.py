@@ -21,6 +21,7 @@ import platform
 import re
 import subprocess
 import sys
+from security import safe_command
 
 # pylint: disable=g-import-not-at-top
 try:
@@ -861,8 +862,7 @@ def validate_cuda_config(environ_cp):
         "Can't find 'find_cuda_config.py' script inside working directory,"
         f' expected in {find_cuda_script}'
     )
-  proc = subprocess.Popen(
-      [environ_cp['PYTHON_BIN_PATH'], find_cuda_script] + cuda_libraries,
+  proc = safe_command.run(subprocess.Popen, [environ_cp['PYTHON_BIN_PATH'], find_cuda_script] + cuda_libraries,
       stdout=subprocess.PIPE,
       env=maybe_encode_env(environ_cp),
   )
